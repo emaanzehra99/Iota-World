@@ -1,0 +1,1272 @@
+/* ==========================================
+   1. CORE ARCHITECTURE & DESIGN VARIABLES
+   ========================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+:root {
+    --bg-dark: #070709;
+    --bg-surface: #0f0f14;
+    --burgundy: #6b001a;
+    --burgundy-light: #920022;
+    --text-white: #ffffff;
+    --text-muted: #a1a1aa;
+    --glass-bg: rgba(255, 255, 255, 0.02);
+    --glass-border: rgba(255, 255, 255, 0.06);
+    --glass-highlight: rgba(255, 255, 255, 0.12);
+    --glass-glow: rgba(146, 0, 34, 0.2);
+}
+
+html {
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-white);
+    overflow-x: hidden;
+    line-height: 1.6;
+}
+
+/* ==========================================
+   2. STICKY NAVIGATION HEADER
+   ========================================== */
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    background: rgba(7, 7, 9, 0.75);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.navbar {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.2rem 2rem;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo img {
+    width: 40px;
+    height: auto;
+}
+
+.logo span {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--text-white);
+    letter-spacing: 0.5px;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 30px;
+    align-items: center;
+}
+
+.nav-links a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    position: relative;
+    padding: 0.4rem 0;
+    transition: color 0.3s ease;
+}
+
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--burgundy-light);
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-links a:hover::after,
+.nav-links a.active::after {
+    width: 100%;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+    color: var(--text-white);
+}
+
+/* Hamburger Dynamic Micro-animations */
+.hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 6px;
+    cursor: pointer;
+    z-index: 1100;
+}
+
+.hamburger span {
+    display: block;
+    width: 26px;
+    height: 2px;
+    background-color: var(--text-white);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 2px;
+}
+
+.hamburger.active span:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+}
+
+.hamburger.active span:nth-child(2) {
+    opacity: 0;
+    transform: translateX(-15px);
+}
+
+.hamburger.active span:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+}
+
+/* ==========================================
+   3. HERO RADIAL GLOW & STATS COUNTERS
+   ========================================== */
+.hero-section {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 10rem 2rem 5rem 2rem;
+
+    /* 1. Added your background image asset call link safely here */
+    background-image: url("classroom.jfif");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    text-align: center;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom,
+            rgba(7, 7, 9, 0.5) 0%,
+            rgba(7, 7, 9, 0.7) 60%,
+            var(--bg-dark) 100%);
+    z-index: 1;
+    pointer-events: none;
+
+    /* --- UPDATED MODULATION FOR A DEEPLY DULLED LOOK --- */
+    backdrop-filter: brightness(0.20) saturate(0.30);
+    -webkit-backdrop-filter: brightness(0.20) saturate(0.30);
+}
+
+/* Custom inline SVG vector controls */
+.program-icon-svg {
+    width: 28px;
+    height: 28px;
+    stroke: var(--burgundy-light);
+    transition: stroke 0.3s ease, transform 0.3s ease;
+    transform: translateZ(25px);
+    /* Keeps original 3D glass depth map intact */
+}
+
+/* Color flare mapping on 3D box hover state */
+.program:hover .program-icon-svg {
+    stroke: #ff2a55;
+    transform: translateZ(35px) scale(1.1);
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 800px;
+    margin-bottom: 5rem;
+}
+
+.hero-content h1 {
+    font-size: 4rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    text-transform: uppercase;
+    margin-bottom: 1.2rem;
+    background: linear-gradient(to right, #ffffff, #d4d4d8);
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero-content p {
+    font-size: 1.25rem;
+    color: var(--text-muted);
+    margin-bottom: 2.5rem;
+    font-weight: 300;
+}
+
+.btn {
+    display: inline-block;
+    text-decoration: none;
+    padding: 1rem 2.5rem;
+    background: var(--burgundy);
+    color: var(--text-white);
+    font-weight: 600;
+    font-size: 0.95rem;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.btn:hover {
+    background: var(--burgundy-light);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px var(--glass-glow);
+}
+
+.info-row {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 1000px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin-top: auto;
+}
+
+.counter-box {
+    background: rgba(15, 15, 20, 0.4);
+    border: 1px solid var(--glass-border);
+    padding: 2.5rem 1.5rem;
+    border-radius: 12px;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    transition: border-color 0.3s ease, transform 0.3s ease;
+}
+
+.counter-box:hover {
+    border-color: rgba(146, 0, 34, 0.4);
+    transform: translateY(-4px);
+}
+
+.counter-box h2 {
+    font-size: 2.8rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+    color: var(--text-white);
+}
+
+.counter-box p {
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    color: var(--text-muted);
+}
+
+/* ==========================================
+   4. CULTURAL FEATURES & UTILITY HEADINGS
+   ========================================== */
+.features,
+.programs-courses,
+.testimonials,
+.cta {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 6rem 2rem;
+}
+
+.feature-text {
+    background: var(--bg-surface);
+    border: 1px solid var(--glass-border);
+    padding: 4rem 3.5rem;
+    border-radius: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2.5rem;
+    text-align: left;
+}
+
+.feature-text h2 {
+    font-size: 2.4rem;
+    font-weight: 700;
+    line-height: 1.35;
+    max-width: 75%;
+}
+
+.section-title {
+    text-align: center;
+    margin-bottom: 5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.section-title h2,
+.section-title h3 {
+    font-size: 2.4rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+.section-title .line {
+    display: block;
+    height: 3px;
+    width: 120px;
+    background: linear-gradient(90deg, transparent, var(--burgundy-light), transparent);
+    position: relative;
+    margin-top: 1rem;
+}
+
+.section-title .line::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    background: var(--text-white);
+    border: 2px solid var(--burgundy-light);
+    border-radius: 50%;
+}
+
+/* ==========================================
+   5. GLASSMORPHIC INTERACTIVE HOVER GRID
+   ========================================== */
+.programs {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 2rem;
+    perspective: 1200px;
+    /* Crucial canvas spatial depth mapping context */
+}
+
+/* Fixed your layout error: added missing dot prefix for selection */
+.program {
+    background: var(--glass-bg);
+    backdrop-filter: blur(14px) saturate(120%);
+    -webkit-backdrop-filter: blur(14px) saturate(120%);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 3rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    transform-style: preserve-3d;
+    will-change: transform, box-shadow;
+}
+
+.program:hover {
+    border-color: var(--glass-highlight);
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.5), 0 0 30px var(--glass-glow);
+}
+
+.program-icon-wrapper {
+    font-size: 2.2rem;
+    color: var(--burgundy-light);
+    margin-bottom: 0.5rem;
+    transform: translateZ(35px);
+    /* Forces spatial physical projection */
+    transition: color 0.3s ease;
+}
+
+.program:hover .program-icon-wrapper {
+    color: #ff2a55;
+}
+
+.program h3 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transform: translateZ(25px);
+}
+
+.program p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    font-weight: 300;
+    line-height: 1.6;
+    transform: translateZ(15px);
+}
+
+/* ==========================================
+   6. TESTIMONIALS SLIDER PLATFORM
+   ========================================== */
+.testimonial-slider {
+    position: relative;
+    max-width: 800px;
+    margin: 0 auto;
+    min-height: 240px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.testimonial {
+    display: none;
+    position: absolute;
+    width: 100%;
+    background: var(--bg-surface);
+    border: 1px solid var(--glass-border);
+    padding: 3.5rem 3rem;
+    border-radius: 16px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.testimonial.testimonial-active {
+    display: block;
+    animation: sliderFadeIn 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+.testimonial p {
+    font-size: 1.2rem;
+    font-style: italic;
+    margin-bottom: 1.5rem;
+    color: #e4e4e7;
+    font-weight: 300;
+}
+
+.testimonial h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: var(--burgundy-light);
+    text-transform: uppercase;
+}
+
+@keyframes sliderFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ==========================================
+   7. CALL TO ACTION & SYSTEM FOOTER
+   ========================================== */
+.cta {
+    text-align: center;
+    background: linear-gradient(135deg, var(--bg-surface) 0%, #070709 100%);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 5rem 2rem;
+    margin-bottom: 6rem;
+}
+
+.cta h2 {
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    font-weight: 700;
+}
+
+.footer {
+    background: #040406;
+    border-top: 1px solid var(--glass-border);
+    padding: 5rem 2rem 2rem 2rem;
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 4rem;
+    margin-bottom: 4rem;
+}
+
+.footer-container h3 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    letter-spacing: 0.5px;
+}
+
+.footer-container h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 1.2rem;
+    color: #e4e4e7;
+    text-transform: uppercase;
+}
+
+.footer-container p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    margin-bottom: 0.75rem;
+}
+
+.footer-container i {
+    margin-right: 8px;
+    color: var(--burgundy-light);
+}
+
+.footer-container ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.footer-container ul a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: color 0.3s ease;
+}
+
+.footer-container ul a:hover,
+.footer-container ul a.active {
+    color: var(--text-white);
+}
+
+.copyright {
+    text-align: center;
+    border-top: 1px solid rgba(255, 255, 0.04);
+    padding-top: 2rem;
+    font-size: 0.85rem;
+    color: #52525b;
+}
+
+/* --- NEW: COMPACT PROGRAM BOX HEADER LAYOUT --- */
+.program-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 0.85rem;
+    transform: translateZ(25px);
+    /* Forces depth separation during 3D tilts */
+}
+
+/* Keeps card titles clean and aligned with icons */
+.program h3 {
+    margin-bottom: 0 !important;
+}
+
+/* Sleek Icon Architecture */
+.program-icon {
+    font-size: 1.5rem;
+    color: var(--burgundy-light);
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+/* Visual flare animation inside the glassmorphic box on hover */
+.program:hover .program-icon {
+    color: #ff2a55;
+    transform: translateZ(10px) scale(1.1);
+}
+
+/* --- NEW: SMOOTH GLIDING VIEWPORT INTERACTION SYSTEM --- */
+.scroll-animate {
+    opacity: 0;
+    transform: translateY(40px) scale(0.98);
+    transition: opacity 0.8s cubic-bezier(0.215, 0.61, 0.355, 1),
+        transform 0.8s cubic-bezier(0.215, 0.61, 0.355, 1);
+    will-change: transform, opacity;
+}
+
+/* State changes instantly invoked by the engine logic */
+.scroll-animate.glide-active {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+/* Custom accelerated glide timing tailored specifically for initial hero rendering */
+.hero-section.scroll-animate {
+    transform: translateY(30px);
+    transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1),
+        transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hero-section.scroll-animate.glide-active {
+    transform: translateY(0);
+}
+
+@media (max-width: 922px) {
+    .hero-content h1 {
+        font-size: 3.2rem;
+    }
+
+    .feature-text {
+        flex-direction: column;
+        text-align: center;
+        padding: 3rem 2rem;
+    }
+
+    .feature-text h2 {
+        max-width: 100%;
+        font-size: 1.8rem;
+    }
+
+    .footer-container {
+        grid-template-columns: 1fr 1fr;
+        gap: 3rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .hamburger {
+        display: flex;
+    }
+
+    .nav-links {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 80%;
+        height: 100vh;
+        background: rgba(7, 7, 9, 0.96);
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+        flex-direction: column;
+        justify-content: center;
+        gap: 2.5rem;
+        transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        border-left: 1px solid var(--glass-border);
+        padding: 2rem;
+    }
+
+    .nav-links.active {
+        right: 0;
+    }
+
+    .info-row {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .hero-content h1 {
+        font-size: 2.4rem;
+    }
+
+    .hero-content p {
+        font-size: 1.1rem;
+    }
+
+    .cta h2 {
+        font-size: 1.8rem;
+    }
+
+    .footer-container {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+    }
+
+}
+
+/* ==========================================
+   9. ABOUT PAGE ARCHITECTURE
+   ========================================== */
+.about-hero {
+    position: relative;
+    min-height: 50vh;
+    /* Shorter than home hero banner */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 8rem 2rem 3rem 2rem;
+    background-image: url("hero-bg.jpg");
+    /* Reuses background setup */
+    background-size: cover;
+    background-position: center;
+    text-align: center;
+}
+
+/* Custom speed adjust for about page mounting glide */
+.about-hero.scroll-animate {
+    transform: translateY(25px);
+    transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1),
+        transform 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.about-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 6rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 5rem;
+}
+
+.about-card-row {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 3.5rem;
+    align-items: center;
+}
+
+/* Alternating row layout framework */
+.about-card-row.reverse {
+    grid-template-columns: 1fr 1.6fr;
+}
+
+.about-card-row.reverse .about-text-panel {
+    grid-column: 2;
+}
+
+.about-card-row.reverse .about-glass-accent {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.about-text-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.card-tag {
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--burgundy-light);
+}
+
+.about-text-panel h2 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+.about-text-panel p {
+    color: var(--text-muted);
+    font-size: 1.05rem;
+    font-weight: 300;
+}
+
+/* Glassmorphic Panel Element */
+.about-glass-accent {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 3rem 2rem;
+    text-align: center;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    transition: border-color 0.3s ease;
+}
+
+.about-glass-accent:hover {
+    border-color: var(--glass-highlight);
+}
+
+.accent-svg {
+    width: 45px;
+    height: 45px;
+    stroke: var(--burgundy-light);
+    margin-bottom: 0.5rem;
+}
+
+.about-glass-accent h3 {
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.about-glass-accent p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    font-weight: 300;
+}
+
+.about-hero {
+    position: relative;
+    min-height: 50vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 8rem 2rem 3rem 2rem;
+
+    /* ─── CHANGE THE FILENAME INSIDE THE QUOTES BELOW TO MATCH YOUR IMAGE EXACTLY ─── */
+    background-image: url("classroom2.jfif");
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    text-align: center;
+}
+
+/* ==========================================
+   10. PREMIUM TREE-STRUCTURE TIMELINE DESIGN
+   ========================================== */
+.timeline-tree-container {
+    position: relative;
+    max-width: 1000px;
+    margin: 4rem auto 0 auto;
+    padding: 2rem 0;
+}
+
+/* Central vertical alignment trunk spine line */
+.timeline-central-spine {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(to bottom, var(--burgundy), var(--burgundy-light), transparent);
+    z-index: 1;
+}
+
+.timeline-branch-item {
+    position: relative;
+    width: 50%;
+    margin-bottom: 4rem;
+    z-index: 2;
+}
+
+/* Left branch orientation specifications */
+.branch-left {
+    left: 0;
+    padding-right: 4rem;
+    text-align: right;
+}
+
+/* Right branch orientation specifications */
+.branch-right {
+    left: 50%;
+    padding-left: 4rem;
+    text-align: left;
+}
+
+/* Custom Adorned Dot Anchors aligned directly to the central tree line */
+.timeline-marker-dot {
+    position: absolute;
+    top: 2.5rem;
+    width: 16px;
+    height: 16px;
+    background: var(--text-white);
+    border: 3px solid var(--burgundy-light);
+    border-radius: 50%;
+    z-index: 3;
+    box-shadow: 0 0 15px var(--glass-glow);
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.branch-left .timeline-marker-dot {
+    right: -8px;
+}
+
+.branch-right .timeline-marker-dot {
+    left: -8px;
+}
+
+/* Tree Content Cards with Glassmorphism variables */
+.timeline-card-content {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 2.5rem;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.4);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+/* Interactive Hover States */
+.timeline-branch-item:hover .timeline-card-content {
+    border-color: rgba(163, 0, 39, 0.35);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 0 25px var(--glass-glow);
+    transform: translateY(-4px);
+}
+
+.timeline-branch-item:hover .timeline-marker-dot {
+    background: var(--burgundy-light);
+    transform: scale(1.2);
+}
+
+.timeline-card-content h4 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--text-white);
+}
+
+.timeline-card-content p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    font-weight: 300;
+    line-height: 1.6;
+}
+
+/* --- MOBILE RESPONSIVE ADAPTATIONS --- */
+@media (max-width: 768px) {
+    .timeline-central-spine {
+        left: 20px;
+        transform: none;
+    }
+
+    .timeline-branch-item {
+        width: 100% !important;
+        left: 0 !important;
+        padding-left: 3rem !important;
+        padding-right: 0 !important;
+        text-align: left !important;
+        margin-bottom: 3rem;
+    }
+
+    .timeline-marker-dot {
+        left: 12px !important;
+        right: auto !important;
+    }
+}
+
+/* Responsive Overrides for About Grid */
+@media (max-width: 768px) {
+
+    .about-card-row,
+    .about-card-row.reverse {
+        grid-template-columns: 1fr !important;
+        gap: 2rem;
+    }
+
+    .about-card-row.reverse .about-text-panel {
+        grid-column: auto;
+    }
+
+    .about-card-row.reverse .about-glass-accent {
+        grid-column: auto;
+        grid-row: auto;
+    }
+
+    .about-text-panel h2 {
+        font-size: 1.8rem;
+    }
+}
+
+/* ==========================================
+   11. FACULTY GRID & PREMIUM PROFILE ENGINE
+   ========================================== */
+.faculty-hero {
+    position: relative;
+    min-height: 50vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 8rem 2rem 3rem 2rem;
+    background-image: url("classroom.jfif"); /* Reuses background core image */
+    background-size: cover;
+    background-position: center;
+    text-align: center;
+}
+
+.faculty-section {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 6rem 2rem;
+}
+
+.faculty-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 2.5rem;
+    margin-bottom: 6rem;
+    perspective: 1200px; /* Maps spatial 3D card layout bounds precisely */
+}
+
+/* Glassmorphic Faculty Profile Frame Cards */
+.faculty-card {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 3rem 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1.5rem;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), 
+                box-shadow 0.5s cubic-bezier(0.25, 1, 0.5, 1), 
+                border-color 0.4s ease;
+    transform-style: preserve-3d;
+    will-change: transform, box-shadow;
+}
+
+.faculty-card:hover {
+    border-color: var(--glass-highlight);
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.5), 0 0 30px var(--glass-glow);
+    transform: translateY(-6px) rotateX(2deg) rotateY(-2deg); /* Seamless micro-tilt simulation */
+}
+
+/* Teacher Avatar Vector Holder Frame */
+.faculty-avatar-wrapper {
+    width: 80px;
+    height: 80px;
+    background: rgba(146, 0, 34, 0.08);
+    border: 1px solid rgba(146, 0, 34, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: translateZ(30px);
+    transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.faculty-card:hover .faculty-avatar-wrapper {
+    background: rgba(146, 0, 34, 0.15);
+    border-color: var(--burgundy-light);
+}
+
+.faculty-svg-avatar {
+    width: 36px;
+    height: 36px;
+    stroke: var(--burgundy-light);
+    transition: stroke 0.3s ease, transform 0.3s ease;
+}
+
+.faculty-card:hover .faculty-svg-avatar {
+    stroke: #ff2a55;
+    transform: scale(1.05);
+}
+
+.faculty-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+}
+
+.subject-tag {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: var(--burgundy-light);
+    transform: translateZ(15px);
+}
+
+.faculty-info h3 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    transform: translateZ(25px);
+}
+
+.faculty-quote {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    font-style: italic;
+    font-weight: 300;
+    line-height: 1.6;
+    margin-top: 0.5rem;
+    transform: translateZ(10px);
+}
+
+/* Premium Faculty Call-to-Action Controls */
+.faculty-cta-wrapper {
+    width: 100%;
+    margin-top: 4rem;
+}
+
+.faculty-cta-box {
+    text-align: center;
+    background: linear-gradient(135deg, var(--bg-surface) 0%, #070709 100%);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 5rem 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.faculty-cta-box h2 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.5rem;
+}
+
+.faculty-cta-box p {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+    font-weight: 300;
+}
+
+/* Mobile Responsiveness Rules for Faculty Canvas Grid */
+@media (max-width: 768px) {
+    .faculty-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    .faculty-cta-box h2 { font-size: 1.6rem; }
+    .faculty-cta-box p { font-size: 1rem; }
+    .faculty-card { padding: 2.5rem 1.5rem; }
+}
+
+/* ==========================================
+   12. PREMIUM GLASSMORPHIC CONTACT STYLING
+   ========================================== */
+.contact-hero {
+    position: relative;
+    min-height: 50vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 8rem 2rem 3rem 2rem;
+    background-image: url("classroom2.jfif"); /* Reuses background setup */
+    background-size: cover;
+    background-position: center;
+    text-align: center;
+}
+
+.contact-section {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 6rem 2rem;
+}
+
+.contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 4rem;
+    align-items: start;
+}
+
+.contact-info-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* Glassmorphic Minimalist Info Snippet Cards */
+.info-glass-card {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    padding: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: border-color 0.3s ease;
+}
+
+.info-glass-card:hover {
+    border-color: rgba(146, 0, 34, 0.3);
+}
+
+.contact-card-svg {
+    width: 28px;
+    height: 28px;
+    stroke: var(--burgundy-light);
+}
+
+.card-detail-text h4 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin-bottom: 0.2rem;
+}
+
+.card-detail-text p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    font-weight: 300;
+}
+
+/* Luxury Form Panel Frame with frosted glass filter layers */
+.contact-form-panel {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 3.5rem 3rem;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+}
+
+.form-group label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: #e4e4e7;
+    text-transform: uppercase;
+}
+
+/* Modern Minimalist Glass Intrusive Fields */
+.form-group input,
+.form-group select,
+.form-group textarea {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--glass-border);
+    border-radius: 6px;
+    padding: 1rem;
+    color: var(--text-white);
+    font-size: 0.95rem;
+    font-weight: 300;
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-group select option {
+    background: #0f0f14; /* Prevents white browser option flash drop */
+    color: var(--text-white);
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: var(--burgundy-light);
+    box-shadow: 0 0 15px rgba(146, 0, 34, 0.15);
+}
+
+.submit-form-btn {
+    width: 100%;
+    cursor: pointer;
+    text-align: center;
+}
+
+/* Interactive Contact Mobile Overrides */
+@media (max-width: 992px) {
+    .contact-grid {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .contact-form-panel {
+        padding: 2.5rem 1.5rem;
+    }
+}

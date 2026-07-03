@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Iota World</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://googleapis.com">
+    <link rel="preconnect" href="https://gstatic.com" crossorigin>
+    <link href="https://googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Sticky Navigation Bar -->
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <img src="logo.png" alt="Iota World Logo">
+                <span>Iota World</span>
+            </div>
+
+            <ul class="nav-links" id="navLinks">
+                <li><a href="home.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="faculty.html">Faculty</a></li>
+                <li><a href="contact.html" class="active">Contact</a></li>
+            </ul>
+
+            <div class="hamburger" id="hamburgerMenu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Subpage Hero Banner Section -->
+    <section class="contact-hero scroll-animate">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1>GET IN TOUCH</h1>
+            <p>Have questions about admissions, scheduling, or programs? Our support team is here to guide you.</p>
+        </div>
+    </section>
+
+    <!-- Main Content: Contact Form & Info Dashboard Split Grid -->
+    <main class="contact-section">
+        <div class="contact-grid">
+            
+            <!-- Left Panel: Strategic Information Cards -->
+            <div class="contact-info-panel">
+                
+                <!-- Detail Card 1: Location -->
+                <div class="info-glass-card scroll-animate">
+                    <svg class="contact-card-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+                    </svg>
+                    <div class="card-detail-text">
+                        <h4>Our Location</h4>
+                        <p>Karachi, Pakistan</p>
+                    </div>
+                </div>
+
+                <!-- Detail Card 2: Email -->
+                <div class="info-glass-card scroll-animate">
+                    <svg class="contact-card-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
+                    </svg>
+                    <div class="card-detail-text">
+                        <h4>Email Correspondence</h4>
+                        <p>info@iotaworld.edu.pk</p>
+                    </div>
+                </div>
+
+                <!-- Detail Card 3: Support Hours -->
+                <div class="info-glass-card scroll-animate">
+                    <svg class="contact-card-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                    </svg>
+                    <div class="card-detail-text">
+                        <h4>Operating Hours</h4>
+                        <p>Mon - Sat: 9:00 AM - 6:00 PM</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Right Panel: Premium Glassmorphic Input Form -->
+            <div class="contact-form-panel scroll-animate">
+                <form id="admissionContactForm" action="#" onsubmit="event.preventDefault(); alert('Message successfully transmitted via secured pipeline.');">
+                    <div class="form-group">
+                        <label for="userName">Full Name</label>
+                        <input type="text" id="userName" required placeholder="Enter your full name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="userEmail">Email Address</label>
+                        <input type="email" id="userEmail" required placeholder="name@gmail.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="chosenSubject">Inquiry Target Course</label>
+                        <select id="chosenSubject">
+                            <option value="general">General Admission Inquiry</option>
+                            <option value="cs">Computer Science</option>
+                            <option value="math">Mathematics</option>
+                            <option value="physics">Physics</option>
+                            <option value="physics">Biology</option>
+                            <option value="physics">Urdu</option>
+                            <option value="physics">English</option>
+                            <option value="islam">Religious Matters & Ethics</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="userMessage">Your Message</label>
+                        <textarea id="userMessage" rows="5" required placeholder="Type your inquiry here..."></textarea>
+                    </div>
+
+                    <button type="submit" class="btn submit-form-btn">SEND MESSAGE</button>
+                </form>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Global System Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div>
+                <h3>IOTA WORLD</h3>
+                <p>Empowering Students through knowledge and values.</p>
+            </div>
+
+            <div>
+                <h4>Links</h4>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="faculty.html">Faculty</a></li>
+                    <li><a href="contact.html" class="active">Contact</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4>Contact</h4>
+                <p>Karachi, Pakistan</p>
+                <p>IotaWorld Institute</p>
+            </div>
+        </div>
+        <p class="copyright">&copy; 2026 IOTA WORLD. All Rights Reserved.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
